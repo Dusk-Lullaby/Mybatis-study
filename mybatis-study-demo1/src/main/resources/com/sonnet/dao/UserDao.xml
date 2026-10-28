@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：命名空间 值必须唯一 一般写接口的权限定名即可
+-->
+<mapper namespace="com.sonnet.dao.UserDao">
+    <!--
+        select标签 就是一个执行查询操作的标签
+            id：我们要写接口的方法名称
+            resultType：描述接口的返回值类型（如果接口的返回值是List Set 集合 ，那这个属性值必须定义为接口的泛型）
+    -->
+    <select id="findAll" resultType="com.sonnet.pojo.User">
+        select * from user
+    </select>
+</mapper>
