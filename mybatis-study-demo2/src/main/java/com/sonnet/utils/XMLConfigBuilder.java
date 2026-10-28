@@ -1,10 +1,10 @@
-package com.xq.utils;
+package com.sonnet.utils;
 
 
 
-import com.xq.cfg.Configuration;
-import com.xq.cfg.Mapper;
-import com.xq.io.Resources;
+import com.sonnet.cfg.Configuration;
+import com.sonnet.cfg.Mapper;
+import com.sonnet.io.Resources;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;

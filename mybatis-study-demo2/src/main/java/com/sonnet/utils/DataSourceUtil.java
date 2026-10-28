@@ -1,7 +1,7 @@
-package com.xq.utils;
+package com.sonnet.utils;
 
 
-import com.xq.cfg.Configuration;
+import com.sonnet.cfg.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

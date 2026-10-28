@@ -1,15 +1,21 @@
-package com.xq.utils;
+package com.sonnet.utils;
 
 
-import com.xq.cfg.Mapper;
+import com.sonnet.cfg.Mapper;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,7 +56,8 @@ public class Executor {
                     //获取它的写入方法
                     Method writeMethod = pd.getWriteMethod();
                     //把获取的列的值，给对象赋值
-                    writeMethod.invoke(obj,columnValue);
+                    columnValue = convertValue(columnName, columnValue, pd.getPropertyType());
+                    writeMethod.invoke(obj, columnValue);
                 }
                 //把赋好值的对象加入到集合中
                 list.add(obj);
@@ -63,6 +70,91 @@ public class Executor {
         }
     }
 
+
+    static Object convertValue(String columnName, Object value, Class<?> targetType) {
+        Class<?> wrappedTargetType = wrapPrimitiveType(targetType);
+        if (value == null) {
+            if (targetType.isPrimitive()) {
+                throw new IllegalArgumentException("Cannot map null from column '" + columnName
+                        + "' to primitive type " + targetType.getName());
+            }
+            return null;
+        }
+
+        if (wrappedTargetType.isInstance(value)) {
+            return value;
+        }
+
+        if (wrappedTargetType == Date.class && value instanceof LocalDateTime) {
+            return Date.from(((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant());
+        }
+        if (wrappedTargetType == Date.class && value instanceof LocalDate) {
+            return Date.from(((LocalDate) value).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+
+        if (value instanceof Number && Number.class.isAssignableFrom(wrappedTargetType)) {
+            try {
+                return convertNumber((Number) value, wrappedTargetType);
+            } catch (ArithmeticException | NumberFormatException e) {
+                throw new IllegalArgumentException("Cannot convert column '" + columnName + "' from "
+                        + value.getClass().getName() + " to " + targetType.getName(), e);
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot map column '" + columnName + "' from "
+                + value.getClass().getName() + " to " + targetType.getName());
+    }
+
+    private static Object convertNumber(Number value, Class<?> targetType) {
+        BigDecimal decimalValue = toBigDecimal(value);
+        if (targetType == Byte.class) {
+            return Byte.valueOf(decimalValue.byteValueExact());
+        }
+        if (targetType == Short.class) {
+            return Short.valueOf(decimalValue.shortValueExact());
+        }
+        if (targetType == Integer.class) {
+            return Integer.valueOf(decimalValue.intValueExact());
+        }
+        if (targetType == Long.class) {
+            return Long.valueOf(decimalValue.longValueExact());
+        }
+        if (targetType == Float.class) {
+            return Float.valueOf(value.floatValue());
+        }
+        if (targetType == Double.class) {
+            return Double.valueOf(value.doubleValue());
+        }
+        if (targetType == BigInteger.class) {
+            return decimalValue.toBigIntegerExact();
+        }
+        if (targetType == BigDecimal.class) {
+            return decimalValue;
+        }
+        throw new IllegalArgumentException("Unsupported numeric type: " + targetType.getName());
+    }
+
+    private static BigDecimal toBigDecimal(Number value) {
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        }
+        if (value instanceof BigInteger) {
+            return new BigDecimal((BigInteger) value);
+        }
+        return new BigDecimal(value.toString());
+    }
+
+    private static Class<?> wrapPrimitiveType(Class<?> type) {
+        if (type == byte.class) return Byte.class;
+        if (type == short.class) return Short.class;
+        if (type == int.class) return Integer.class;
+        if (type == long.class) return Long.class;
+        if (type == float.class) return Float.class;
+        if (type == double.class) return Double.class;
+        if (type == boolean.class) return Boolean.class;
+        if (type == char.class) return Character.class;
+        return type;
+    }
 
     private void release(PreparedStatement pstm,ResultSet rs){
         if(rs != null){

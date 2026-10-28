@@ -1,12 +1,12 @@
 package com.sonnet;
 
+import com.sonnet.builder.SqlSessionFactoryBuilder;
 import com.sonnet.dao.UserDao;
+import com.sonnet.factory.SqlSessionFactory;
+import com.sonnet.io.Resources;
 import com.sonnet.pojo.User;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
+import com.sonnet.sqlSession.SqlSession;
 import org.junit.Test;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.InputStream;
 import java.util.List;
