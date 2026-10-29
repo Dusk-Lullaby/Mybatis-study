@@ -13,6 +13,7 @@
     <module>mybatis-study-demo1</module>
     <module>mybatis-study-demo2</module>
       <module>mybatis-study-demo3</module>
+      <module>springmvc-study-demo4</module>
   </modules>
 
   <properties>

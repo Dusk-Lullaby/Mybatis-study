@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.UserDao">
+    <!--
+        查询所有用户信息
+        结果：目前这样写是无法封装数据结果集的。因为数据表字段名称和实体类字段不一样（忽略大小写情况除外）
+            解决方案：
+            1. 通过取别名的方式解决问题
+                给查询的字段取别名，别名就是实体类字段的名称
+            2. 手动解决实体字段和数据表字段不一致问题
+                resultMap标签解决字段不一致
+                resultMap标签：这个标签的作用是解决实体字段和数据表字段不一致问题
+                    id：值任意，需要保证值唯一
+                    type：描述实体的权限定名
+                id标签：用来做主键字段的映射
+                    property：描述实体类的名称
+                    column：描述的是数据表字段的名称
+                result标签：用来描述非主键字段的映射关系
+                    property：描述实体类的名称
+                    column：描述的是数据表字段的名称
+    -->
+<!--
+    <select id="findAll" resultType="com.sonnet.pojo.User">
+        /*select * from user*/
+        select id as userId, username as userName, birthday as userBirthday,
+               sex as userSex, address as userAddress from user
+    </select>
+-->
+    <resultMap id="userMap" type="com.sonnet.pojo.User">
+        <id property="userId" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="userBirthday" column="birthday"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userAddress" column="address"></result>
+    </resultMap>
+
+    <!--
+        id：接口的名称
+        resultMap：值引用resultMap标签id中的值
+    -->
+    <select id="findAll" resultMap="userMap">
+        select * from user
+    </select>
+
+    <select id="findById" resultMap="userMap" parameterType="int">
+        select * from user where id = #{id}
+    </select>
+</mapper>

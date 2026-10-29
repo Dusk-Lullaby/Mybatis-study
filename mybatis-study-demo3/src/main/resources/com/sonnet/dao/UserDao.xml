@@ -7,16 +7,104 @@
     <!--
         查询所有用户的信息
     -->
-    <select id="findAll" resultType="com.sonnet.pojo.User">
+    <select id="findAll" resultType="user">
         select * from user
     </select>
     <!--
         根据id查询对应的用户信息
             id：定义接口的名称
             resultType：定义方法的返回值类型
-            parameterType：定义接口形参的数据类型
+            parameterType：定义接口形参的数据类型   默认的是 参数类型的权限定名
+                mybatis对这些数据类型的全限定名设置做了别名的设置 在TypeAliaRegistry里面进行了相关的别名设置
+                如果输入的参数有的数据类型是string或者其他基本数据类型，占位符里面的内容可以是任意指定的
+                如果输入的参数的数据类型是自定义的pojo。那么占位符里面的数据千万不能随意定义（必须要和pojo实体类的成员属性名保持一致）
     -->
-    <select id="findUserById" resultType="com.sonnet.pojo.User" parameterType="int">
+    <select id="findUserById" resultType="user" parameterType="int">
         select * from user where id = #{id}
+    </select>
+
+    <!--
+        新增用户
+        selectKey：获取自增长主键的标签
+            keyColumn：获取表中主键的字段名称
+            keyProperty：实体类中映射主键字段的属性
+            resultType：主键字段的数据类型
+            select last_insert_id()：mysql的系统函数，专门用来获取新增之后主键的值
+    -->
+    <insert id="addUser" parameterType="user" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+<!--
+        <selectKey keyColumn="id" keyProperty="id" resultType="int">
+            select last_insert_id()
+        </selectKey>
+-->
+        insert into user(username, birthday, sex, address) values(#{username}, #{birthday}, #{sex}, #{address});
+    </insert>
+
+    <!--
+        修改用户信息
+    -->
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username}, birthday=#{birthday}, sex=#{sex}, address=#{address} where id=#{id};
+    </update>
+
+    <!--
+        通过id删除用户的信息
+    -->
+    <delete id="deleteUserById" parameterType="int">
+        delete from user where id = #{id}
+    </delete>
+
+    <!--
+        模糊查询 根据用户名进行模糊查询操作
+    -->
+    <select id="findUserByUsername" parameterType="string" resultType="com.sonnet.pojo.User">
+        select * from user where username like #{username}
+    </select>
+
+    <!--
+        模糊查询2 根据用户名称进行查询
+    -->
+    <select id="findUserByUsername2" parameterType="string" resultType="com.sonnet.pojo.User">
+        select * from user where username like '%${value}%'
+    </select>
+
+    <!--
+        聚合函数查询
+    -->
+    <select id="getTotal" resultType="int">
+        select count(id) from user
+    </select>
+
+    <!--
+        解决接口中存在多个参数的问题
+    -->
+    <select id="findUserBySexAndAddress" resultType="com.sonnet.pojo.User">
+        select * from user where sex = '${param1}' and address = '${param2}'
+    </select>
+
+    <!--
+        使用map集合解决多个参数的问题
+        #{} 里面的值定义为map集合中的key值
+    -->
+    <select id="findUserByMap" resultType="com.sonnet.pojo.User" parameterType="map">
+        select * from user where sex = #{sex} and address = #{address}
+
+    </select>
+
+    <!--
+        根据id的集合查询对应的用户信息
+        foreach：循环遍历的标签
+            collection：QueryVo里面集合类型的变量名称
+            item：遍历的集合的元素的别名
+            separator：用逗号对遍历的元素的值进行分割
+                select * from user where id in(41,43,45,50)
+            open：括号的开始部分
+            close：括号的结束部分
+    -->
+    <select id="findUserByIds" resultType="com.sonnet.pojo.User" parameterType="com.sonnet.pojo.QueryVo">
+        select * from user where id in
+                           <foreach collection="ids" item="id" separator="," open="(" close=")">
+                               #{id}
+                           </foreach>
     </select>
 </mapper>

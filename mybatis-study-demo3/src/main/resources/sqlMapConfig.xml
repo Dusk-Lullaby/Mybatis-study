@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
+    <!--定义别名-->
+    <typeAliases>
+        <!--定义别名 type：定义别名的类的全限定名 alias：取的别名-->
+        <!--<typeAlias type="com.sonnet.pojo.User" alias="user"></typeAlias>-->
+        <!--描述类名所在的包路径，默认情况下，别名就是当前包路径下面的类的名称的小写-->
+        <package name="com.sonnet.pojo"/>
+    </typeAliases>
+
     <environments default="mybatis">
         <environment id="mybatis">
             <transactionManager type="JDBC"></transactionManager>
