@@ -28,7 +28,7 @@ public class TestMybatis {
         // 构建SqlSessionFactory对象
         SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
         // 生成SqlSession对象
-        sqlSession = sqlSessionFactory.openSession();
+        sqlSession = sqlSessionFactory.openSession(true); // 关闭事务的手动提交
         // 生成接口的代理对象
         userDao = sqlSession.getMapper(UserDao.class);
 
@@ -54,7 +54,7 @@ public class TestMybatis {
     @Test
     public void test03() {
         User user = new User();
-        user.setUsername("嫁衣");
+        user.setUsername("嫁衣2");
         user.setBirthday(new Date());
         user.setAddress("zhejiang");
         user.setSex("女");
@@ -62,7 +62,7 @@ public class TestMybatis {
         // 获取新增数据的主键
         System.out.println("新增用户的id：" + user.getId());
         // 手动提交事务
-        sqlSession.commit();
+        //sqlSession.commit();
     }
 
     @Test
@@ -74,13 +74,13 @@ public class TestMybatis {
         user.setAddress("浙江");
         user.setSex("女");
         userDao.updateUser(user);
-        sqlSession.commit();
+        //sqlSession.commit();
     }
 
     @Test
     public void test05() {
         userDao.deleteUserById(52);
-        sqlSession.commit();
+        //sqlSession.commit();
     }
 
     @Test

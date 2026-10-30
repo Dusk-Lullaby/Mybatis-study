@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：命名空间 值必须唯一 一般写接口的权限定名即可
+-->
+<mapper namespace="com.sonnet.dao.UserDao">
+
+    <!--
+        动态查询
+        if标签：用来条件判断
+            test属性：描述的是判断条件 如果为true就执行if标签里面的内容，否则不执行
+    -->
+    <select id="findByCondition" parameterType="user" resultType="user">
+        select * from user where 1=1
+        <if test="username != null and username != ''">
+            and username = #{username}
+        </if>
+        <if test="birthday != null and birthday != ''">
+            and birthday = #{birthday}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex = #{sex}
+        </if>
+        <if test="address != null and address != ''">
+            and address = #{address}
+        </if>
+    </select>
+
+    <!--
+        where标签
+            where标签本身解析成sql语句种的where关键字
+            替换了1=1，并且在底层解析sql的时候，满足条件的第一个if标签，会将if里面的and自动去除
+    -->
+    <select id="findByCondition2" resultType="user" parameterType="user">
+        select * from user
+        <where>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="birthday != null and birthday != ''">
+                and birthday = #{birthday}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+        </where>
+    </select>
+
+    <!--
+        动态修改
+        set标签：封装动态修改的字段
+            底层在解析sql的时候，会将set标签动态的解析成set关键字
+            并且在拼接sql的时候，会将满足最后一个if标签里面的内容的逗号，给去除，保证update语法的正确性
+    -->
+    <update id="updateUserByCondition" parameterType="user">
+        update user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="birthday != null and birthday != ''">
+                birthday = #{birthday},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--
+        描述sql片段
+        id：定义sql片段的名称 自定义 唯一即可
+    -->
+    <sql id="key">
+        /*trim标签：去除满足条件的if之中的内容的最有一个逗号*/
+        <trim suffixOverrides=",">
+            <if test="username != null and username != ''">
+                username,
+            </if>
+            <if test="birthday != null and birthday != ''">
+                birthday,
+            </if>
+            <if test="sex != null and sex != ''">
+                sex,
+            </if>
+            <if test="address != null and address != ''">
+                address,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="value">
+        <trim suffixOverrides=",">
+            <if test="username != null and username != ''">
+                #{username},
+            </if>
+            <if test="birthday != null and birthday != ''">
+                #{birthday},
+            </if>
+            <if test="sex != null and sex != ''">
+                #{sex},
+            </if>
+            <if test="address != null and address != ''">
+                #{address},
+            </if>
+        </trim>
+    </sql>
+    <!--
+        动态新增
+        include标签：引入sql片段的标签
+            refid：引用sql片段的id值
+    -->
+    <insert id="addUserSelective" parameterType="user">
+        insert into user(<include refid="key"/>) values (<include refid="value"></include>)
+    </insert>
+
+    <!--
+        choose when otherwise
+        这种标签类似于if elseif else 分支
+        如果有一个when满足条件，即使后面的when也满足条件，那么都不会执行
+        如果不满足所有的when分支，那么就执行otherwise分支
+    -->
+    <select id="findByCondition3" parameterType="user" resultType="user">
+        select * from user
+        <where>
+            <choose>
+                <when test="username != null and username != ''">
+                    username = #{username}
+                </when>
+                <when test="birthday != null and birthday != ''">
+                    birthday = #{birthday}
+                </when>
+                <when test="sex != null and sex != ''">
+                    sex = #{sex}
+                </when>
+                <when test="address != null and address != ''">
+                    address = #{address}
+                </when>
+                <otherwise>
+                    id = #{id}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    
+    <!--
+        批量删除用户根据id
+        当我们将数组或者list集合作为参数传递给mybatis，那么mybatis会自动将其包装在一个map集合中，
+        用其名称作为key，value就是数组或者集合的本身。所以在获取这个数组或者集合的时候，需要通过key来获取
+        {"array", ids}
+        {"List", list}
+    -->
+    <delete id="deleteUserByIds">
+        delete from user where id in(
+            <foreach collection="ids" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+    </delete>
+
+    <!--
+        根据id进行批量删除，传递集合作为参数
+    -->
+    <delete id="deleteUserByIds2">
+        delete from user where id in
+           (
+            <foreach collection="list" separator="," item="id">
+                #{id}
+            </foreach>
+            )
+    </delete>
+
+    <!--
+        新增
+    -->
+    <insert id="addUser" parameterType="user">
+        insert into user(username, birthday, sex, address) values(#{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+</mapper>

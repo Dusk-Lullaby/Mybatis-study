@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.AccountDao">
+
+    <!--
+        查询所有账户信息及其对应的用户信息
+    -->
+    <select id="findAll" resultType="com.sonnet.pojo.Account">
+        SELECT account.*, user.username, `user`.address FROM account ,`user` WHERE account.UID = `user`.id;
+    </select>
+</mapper>
