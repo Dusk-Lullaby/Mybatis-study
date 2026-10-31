@@ -1,6 +1,12 @@
 package com.sonnet;
 
 import com.sonnet.dao.AccountDao;
+import com.sonnet.dao.RoleDao;
+import com.sonnet.dao.UserDao;
+import com.sonnet.pojo.Account;
+import com.sonnet.pojo.AccountUser;
+import com.sonnet.pojo.Role;
+import com.sonnet.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,11 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class TestMybatis {
 
     SqlSession sqlSession;
-    AccountDao accountDao;
+    //AccountDao accountDao;
+    //UserDao userDao;
+    RoleDao roleDao;
 
     @Before // 在@Test方法执行之前执行
     public void before() throws Exception{
@@ -27,7 +36,7 @@ public class TestMybatis {
         // 生成SqlSession对象
         sqlSession = sqlSessionFactory.openSession(true); // 关闭事务的手动提交
         // 生成接口的代理对象
-        accountDao = sqlSession.getMapper(AccountDao.class);
+        roleDao = sqlSession.getMapper(RoleDao.class);
     }
 
     @After // 在@Test方法执行之后执行
@@ -35,8 +44,32 @@ public class TestMybatis {
         sqlSession.close();
     }
 
+/*
     @Test
     public void test01() {
-        accountDao.findAll().forEach(System.out::println);
+        List<Account> accountUserList = accountDao.findAll();
+        for(Account account : accountUserList) {
+            System.out.println(account);
+        }
+    }
+*/
+
+/*
+    @Test
+    public void test02() {
+        List<User> userList = userDao.findAll();
+        for (User user : userList) {
+            System.out.println(user);
+        }
+    }
+*/
+
+    @Test
+    public void Test03() {
+        List<Role> roleList = roleDao.findAll();
+        for (Role role : roleList) {
+            System.out.println(role);
+        }
+
     }
 }

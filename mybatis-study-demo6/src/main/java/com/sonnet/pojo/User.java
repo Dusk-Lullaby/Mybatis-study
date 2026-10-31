@@ -1,6 +1,7 @@
 package com.sonnet.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * pojo 与数据表user形成映射关系
@@ -16,6 +17,10 @@ public class User {
     private String sex;
     private String address;
 
+/*
+    // 一个用户对应有多个账户
+    private List<Account> accounts;
+*/
 
     public User() {
     }
@@ -108,7 +113,31 @@ public class User {
         this.address = address;
     }
 
+/*
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+*/
+
     public String toString() {
         return "User{id = " + id + ", username = " + username + ", birthday = " + birthday + ", sex = " + sex + ", address = " + address + "}";
     }
+
+/*
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", birthday=" + birthday +
+                ", sex='" + sex + '\'' +
+                ", address='" + address + '\'' +
+                ", accounts=" + accounts +
+                '}';
+    }
+*/
 }

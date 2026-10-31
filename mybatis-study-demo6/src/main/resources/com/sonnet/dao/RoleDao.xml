@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.RoleDao">
+
+    <resultMap id="roleMap" type="role">
+        <id column="id" property="roleId"></id>
+        <result column="role_name" property="roleName"></result>
+        <result column="role_desc" property="roleDesc"></result>
+        <collection property="users" ofType="user">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="birthday" column="birthday"></result>
+            <result property="sex" column="sex"></result>
+            <result property="address" column="address"></result>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="roleMap">
+        SELECT
+            r.*,
+            u.username,
+            u.address
+        FROM
+            `user` AS u,
+            role AS r,
+            user_role AS ur
+        WHERE
+            u.id = ur.UID
+          AND r.id = ur.RID
+    </select>
+</mapper>

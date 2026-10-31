@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.UserDao">
+
+<!--
+    <resultMap id="userMap" type="user">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="sex" property="sex"></result>
+        <result column="address" property="address"></result>
+        &lt;!&ndash;
+            collection：用于一对多关联查询的时候，需要指定字段的映射关系
+                property：实体中的属性的字段名称
+        &ndash;&gt;
+        <collection property="accounts" ofType="account">
+            <id property="id" column="id"></id>
+            <result property="uid" column="uid"></result>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+    &lt;!&ndash;
+        查询所有的用户信息，及其关联的账户信息
+    &ndash;&gt;
+    <select id="findAll" resultMap="userMap">
+        SELECT user.*, account.uid, account.money FROM account ,`user` WHERE account.UID = `user`.id;
+    </select>
+-->
+</mapper>

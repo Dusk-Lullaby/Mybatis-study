@@ -13,9 +13,16 @@
     <module>mybatis-study-demo1</module>
     <module>mybatis-study-demo2</module>
       <module>mybatis-study-demo3</module>
-      <module>springmvc-study-demo4</module>
+      <module>mybatis-study-demo4</module>
       <module>mybatis-study-demo5</module>
       <module>mybatis-study-demo6</module>
+      <module>mybatis-study-demo7</module>
+      <module>mybatis-study-demo8</module>
+      <module>mybatis-study-demo9</module>
+      <module>mybatis-study-demo10</module>
+      <module>mybatis-study-demo11</module>
+      <module>mybatis-study-demo12</module>
+      <module>mybatis-study-generator</module>
   </modules>
 
   <properties>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.RoleDao">
+    <!--
+        根据用户id查询对应的角色信息
+    -->
+    <select id="findRolesByUid" resultType="role" parameterType="int">
+        SELECT * FROM role WHERE id IN(
+            SELECT rid FROM user_role WHERE uid = #{id}
+        )
+    </select>
+</mapper>

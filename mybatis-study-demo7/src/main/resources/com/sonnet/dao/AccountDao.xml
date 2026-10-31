@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sonnet.dao.AccountDao">
+
+    <resultMap id="accountMap" type="account">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"></result>
+        <result column="money" property="money"></result>
+        <!--
+            要根据已有的账户信息，去查询对应的用户信息
+            column：要传递给select映射的参数
+            select：要进行关联查询的方法（接口的权限定名 + “.” + 方法名称）
+            fetchType="lazy"：配置懒加载策略(也可以在mybatis的核心配置文件中配置)
+        -->
+        <association property="user" column="uid" select="com.sonnet.dao.UserDao.findUserById" fetchType="lazy"></association>
+    </resultMap>
+
+    <select id="findAll" resultMap="accountMap">
+        select * from account
+    </select>
+</mapper>

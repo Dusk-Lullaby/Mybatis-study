@@ -30,6 +30,6 @@
 
     <!--在核心配置文件中导入，接口的映射文件-->
     <mappers>
-        <mapper resource="com/sonnet/dao/AccountDao.xml"></mapper>
+        <package name="com.sonnet.dao"/>
     </mappers>
 </configuration>

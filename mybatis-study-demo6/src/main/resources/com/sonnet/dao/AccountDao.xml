@@ -5,10 +5,4 @@
 
 <mapper namespace="com.sonnet.dao.AccountDao">
 
-    <!--
-        查询所有账户信息及其对应的用户信息
-    -->
-    <select id="findAll" resultType="com.sonnet.pojo.Account">
-        SELECT account.*, user.username, `user`.address FROM account ,`user` WHERE account.UID = `user`.id;
-    </select>
 </mapper>

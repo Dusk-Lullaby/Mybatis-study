@@ -16,6 +16,7 @@ import java.util.*;
 
 public class TestMybatis {
 
+    SqlSessionFactory sqlSessionFactory;
     SqlSession sqlSession;
     UserDao userDao;
 
@@ -26,7 +27,7 @@ public class TestMybatis {
         // 构建SqlSessionFactoryBuilder对象
         SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
         // 构建SqlSessionFactory对象
-        SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
+        sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
         // 生成SqlSession对象
         sqlSession = sqlSessionFactory.openSession(true); // 关闭事务的手动提交
         // 生成接口的代理对象
@@ -47,8 +48,14 @@ public class TestMybatis {
 
     @Test
     public void test02() throws Exception{
-        User user = userDao.findUserById(48);
-        System.out.println(user);
+        User user1 = userDao.findUserById(48);
+        System.out.println("第一次查询" + user1);
+        // 关闭sqlSession
+        sqlSession.close();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        userDao = sqlSession.getMapper(UserDao.class);
+        User user2 = userDao.findUserById(48);
+        System.out.println("第二次查询" + user2);
     }
 
     @Test
